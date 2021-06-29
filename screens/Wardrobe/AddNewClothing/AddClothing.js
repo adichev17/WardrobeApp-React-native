@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { ActionSheet, Root } from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -17,6 +18,8 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 export default function AddClothing() {
   const [selectedImage, setSelectedImage] = React.useState(null);
+  const [nameOfCategory, setNameOfCategory] = React.useState('Верхняя одежда');
+  const [nameOfSeason, setNameOfSeason] = React.useState('Зима');
 
   const onClickAddImage = () => {
     const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel'];
@@ -52,11 +55,54 @@ export default function AddClothing() {
     setSelectedImage({ localUri: pickerResult.uri });
   };
 
+  const DropdownCategory = () => {
+    return (
+      <RNPickerSelect
+        value={nameOfCategory}
+        useNativeAndroidPickerStyle={false}
+        onValueChange={(value) => setNameOfCategory(value)}
+        items={[
+          { label: 'Верхняя одежда', value: 'Верхняя одежда' },
+          { label: 'Штаны', value: 'Штаны' },
+          { label: 'Носки', value: 'Носки' },
+        ]}>
+        <Text style={styles.DropdownText}>{nameOfCategory}</Text>
+      </RNPickerSelect>
+    );
+  };
+  const DropdownSeason = () => {
+    return (
+      <RNPickerSelect
+        value={nameOfCategory}
+        useNativeAndroidPickerStyle={false}
+        onValueChange={(value) => setNameOfSeason(value)}
+        items={[
+          { label: 'Зима', value: 'Зима' },
+          { label: 'Весна', value: 'Весна' },
+          { label: 'Лето', value: 'Лето' },
+        ]}>
+        <Text style={styles.DropdownText}>{nameOfSeason}</Text>
+      </RNPickerSelect>
+    );
+  };
+
   if (selectedImage !== null) {
     return (
       <View style={styles.content}>
-        <Text style={styles.header}>Добавление вещи</Text>
-        <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+        <View style={styles.contentImage}>
+          <Text style={styles.header}>Добавление вещи</Text>
+          <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+        </View>
+        <View style={styles.wrapperDropdown}>
+          <View style={styles.Dropdown}>
+            <Text style={styles.headerDropdown}>Категория</Text>
+            <DropdownCategory />
+          </View>
+          <View style={styles.Dropdown}>
+            <Text style={styles.headerDropdown}>Сезон</Text>
+            <DropdownSeason />
+          </View>
+        </View>
       </View>
     );
   }
@@ -73,10 +119,13 @@ export default function AddClothing() {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
+  contentImage: {
     alignItems: 'center',
     marginTop: '10%',
+    height: '65%',
+  },
+  content: {
+    marginTop: '5%',
   },
   bthPressStyle: {
     backgroundColor: '#0080ff',
@@ -92,8 +141,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   thumbnail: {
-    width: 500,
-    height: height - 350,
+    width: '100%',
+    height: '100%',
     resizeMode: 'contain',
   },
   header: {
@@ -102,5 +151,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'gray',
     marginBottom: '10%',
+  },
+  wrapperDropdown: {
+    marginTop: '18%',
+    height: '15%',
+    marginHorizontal: '10%',
+  },
+  Dropdown: {
+    marginTop: '10%',
+    width: '80%',
+    // backgroundColor:"#000000"
+  },
+  DropdownText: {
+    color: 'gray',
+    fontSize: 15,
+    marginTop: '2%',
+  },
+  headerDropdown: {
+    fontSize: 20,
   },
 });
