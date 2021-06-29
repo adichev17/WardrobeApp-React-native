@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
-import Button from './../components/button';
+import Button from '../../components/button';
 
 export default function HomeScreen({ navigation }) {
   return (
     <View style={{}}>
       <ImageBackground
-        source={require('.././src/bgmain.jpg')}
+        source={require('../../src/bgmain.jpg')}
         style={styles.imgBackground}
         resizeMode="cover">
         <View style={styles.wrapperMainInfo}>

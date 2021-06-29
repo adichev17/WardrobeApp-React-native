@@ -15,7 +15,9 @@ export default function App({ navigation }) {
     userName: null,
     userToken: null,
   };
-
+  // AsyncStorage.removeItem('userToken');
+  // AsyncStorage.removeItem('user');
+  // AsyncStorage.removeItem('id');
   loginReducer = (prevState, action) => {
     switch (action.type) {
       case 'RETRIEVE_TOKEN':
@@ -55,7 +57,7 @@ export default function App({ navigation }) {
       signIn: async (userName, password, setIsLoading) => {
         let userToken;
         userToken = null;
-        fetch(`https://scanappbarcode.azurewebsites.net/CreateToken`, {
+        fetch(`https://wardrobeapp.azurewebsites.net/CreateToken`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -79,7 +81,7 @@ export default function App({ navigation }) {
                 userToken = data.token;
                 AsyncStorage.setItem('userToken', 'Bearer ' + userToken);
 
-                fetch(`https://scanappbarcode.azurewebsites.net/GetUser`, {
+                fetch(`https://wardrobeapp.azurewebsites.net/GetUser`, {
                   headers: {
                     Accept: 'application/json',
                     Authorization: 'Bearer ' + userToken,
