@@ -1,65 +1,31 @@
-import React, { Component, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import { Camera } from 'expo-camera';
+
 import { ActionSheet, Root } from 'native-base';
-import ImageCropPicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { DropdownCategory, DropdownSeason } from '../ComponentsForAddingThing/Components';
-import * as ImagePicker from 'expo-image-picker';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-export default function AddClothing({ navigation }) {
-  const [selectedImage, setSelectedImage] = React.useState(null);
+export default function AddThingPictureNow({ navigation }) {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
   const [nameOfCategory, setNameOfCategory] = React.useState('Верхняя одежда');
   const [nameOfSeason, setNameOfSeason] = React.useState('Зима');
+  const [selectedImage, setSelectedImage] = React.useState(null);
 
-  const onClickAddImage = () => {
-    const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel'];
-    ActionSheet.show(
-      { options: BUTTONS, cancelButtonIndex: 2, title: 'Select a Photo' },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            navigation.navigate('AddThingPictureNow');
-            break;
-          case 1:
-            openImagePickerAsync();
-            break;
-          default:
-            break;
-        }
-      },
-    );
-  };
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
   const onSaveThing = () => {
     navigation.goBack();
     alert('Вещь в шкафу:)');
-  };
-
-  let openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
-      return;
-    }
-
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-    if (pickerResult.cancelled === true) {
-      return;
-    }
-
-    setSelectedImage({ localUri: pickerResult.uri });
   };
 
   const DropdownCategory = () => {
@@ -93,7 +59,14 @@ export default function AddClothing({ navigation }) {
     );
   };
 
-  if (selectedImage !== null) {
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  if (selectedImage != null) {
     return (
       <View style={styles.content}>
         <View style={styles.contentImage}>
@@ -120,20 +93,77 @@ export default function AddClothing({ navigation }) {
   }
 
   return (
-    <Root>
-      <View style={styles.contentRoot}>
-        <TouchableOpacity onPress={onClickAddImage} style={styles.bthPressStyle}>
-          <Text style={{ fontWeight: 'bold' }}> Ура, добавим новые вещи </Text>
-        </TouchableOpacity>
-      </View>
-    </Root>
+    <View style={{ flex: 1 }}>
+      <Camera
+        style={{ flex: 1 }}
+        type={type}
+        ref={(ref) => {
+          setCameraRef(ref);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+            justifyContent: 'flex-end',
+          }}>
+          <TouchableOpacity
+            style={{
+              flex: 0.1,
+              alignSelf: 'flex-end',
+            }}
+            onPress={() => {
+              setType(
+                type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back,
+              );
+            }}>
+            <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ alignSelf: 'center' }}
+            onPress={async () => {
+              if (cameraRef) {
+                let photo = await cameraRef.takePictureAsync();
+                setSelectedImage({ localUri: photo.uri });
+                // console.log('photo', photo);
+              }
+            }}>
+            <View
+              style={{
+                borderWidth: 2,
+                borderRadius: '50%',
+                borderColor: 'white',
+                height: 50,
+                width: 50,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  borderWidth: 2,
+                  borderRadius: '50%',
+                  borderColor: 'white',
+                  height: 40,
+                  width: 40,
+                  backgroundColor: 'white',
+                }}></View>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </Camera>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   contentRoot: {
+    // flex: 1,
+    // marginTop: '50%',
     height: '100%',
     justifyContent: 'center',
+    // marginHorizontal: '5%',
     alignItems: 'center',
   },
   contentImage: {
