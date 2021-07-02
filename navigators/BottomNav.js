@@ -21,11 +21,11 @@ export default function BottomNavScreen() {
           if (route.name === 'Профиль') {
             iconName = focused ? 'person-circle-outline' : 'person-outline';
           } else if (route.name === 'Шкаф') {
-            iconName = focused ? 'cart-outline' : 'cart-outline';
+            iconName = focused ? 'library-outline' : 'library-outline';
           } else if (route.name === 'Конструктор') {
-            iconName = focused ? 'basket-outline' : 'basket-outline';
+            iconName = focused ? 'duplicate-outline' : 'duplicate-outline';
           } else if (route.name === 'Друзья') {
-            iconName = focused ? 'qr-code-outline' : 'qr-code-outline';
+            iconName = focused ? 'person-add-outline' : 'person-add-outline';
           }
 
           // You can return any component that you like here!

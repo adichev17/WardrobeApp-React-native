@@ -11,7 +11,6 @@ import {
 import { ActionSheet, Root } from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import { DropdownCategory, DropdownSeason } from '../ComponentsForAddingThing/Components';
 import * as ImagePicker from 'expo-image-picker';
 
 const width = Dimensions.get('window').width;
