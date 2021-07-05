@@ -8,11 +8,13 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { BottomSheet, ListItem, Button } from 'react-native-elements';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AddClothing from './AddNewClothing/AddClothing';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ThingComponentScrollViewWrapper from './Components/ThingComponentScrollViewWrapper';
 
@@ -24,6 +26,33 @@ import { style } from 'styled-system';
 export default function HomeScreen({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
   const [nameActiveCategory, setNameActiveCategory] = useState('Все вещи');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [ListThing, setListThing] = useState(null);
+
+  const GetAllThings = () => {
+    AsyncStorage.getItem('id', (err, result) => {
+      if (result) {
+        fetch(
+          'https://wardrobeapp.azurewebsites.net/GetAllThings/1fdd05d8-3052-478b-95cb-aaf72b9b89e3',
+        )
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setListThing(data);
+              setIsLoading(false);
+              alert(data);
+            }
+          });
+      }
+    });
+  };
+
+  useEffect(() => {
+    GetAllThings();
+  }, []);
 
   const list = [
     {
@@ -52,28 +81,28 @@ export default function HomeScreen({ navigation }) {
     },
   ];
 
-  const ListThing = [
-    {
-      category: 'Штаны',
-      includeThing: [
-        'https://shop4big.ru/image/cache/catalog/data/Bruki%20leto/Bryuki%20Leto%202017/meyer-bonn-5404-17-1-460x460.jpeg',
-        'https://li0.rightinthebox.com/images/500x500/201910/uwanqr1570525788498.jpg',
-        'https://indiastyle.ru/files_ru/products/original/14307-2213-6-3.jpg',
-      ],
-    },
-    {
-      category: 'Верхняя одежда',
-      includeThing: [
-        'https://homedorf.ru/upload/iblock/f32/f32e61630aaa46cbf656c6e4eae96756.jpg',
-        'https://www.vitoricci.ru/images/131865052562889531-2.jpg',
-        'https://avatars.mds.yandex.net/get-marketpic/364498/market_A7P6pT7Wb3sEQWBU840iMA/orig',
-      ],
-    },
-    {
-      category: 'Кроссовки',
-      includeThing: ['https://static.kupivip.ru/V0/04/09/02/00/3b.jpg'],
-    },
-  ];
+  // const ListThing = [
+  //   {
+  //     category: 'Штаны',
+  //     includeThings: [
+  //       'https://shop4big.ru/image/cache/catalog/data/Bruki%20leto/Bryuki%20Leto%202017/meyer-bonn-5404-17-1-460x460.jpeg',
+  //       'https://li0.rightinthebox.com/images/500x500/201910/uwanqr1570525788498.jpg',
+  //       'https://indiastyle.ru/files_ru/products/original/14307-2213-6-3.jpg',
+  //     ],
+  //   },
+  //   {
+  //     category: 'Верхняя одежда',
+  //     includeThings: [
+  //       'https://homedorf.ru/upload/iblock/f32/f32e61630aaa46cbf656c6e4eae96756.jpg',
+  //       'https://www.vitoricci.ru/images/131865052562889531-2.jpg',
+  //       'https://avatars.mds.yandex.net/get-marketpic/364498/market_A7P6pT7Wb3sEQWBU840iMA/orig',
+  //     ],
+  //   },
+  //   {
+  //     category: 'Кроссовки',
+  //     includeThings: ['https://static.kupivip.ru/V0/04/09/02/00/3b.jpg'],
+  //   },
+  // ];
 
   const onClickAddImage = () => {
     const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel'];
@@ -91,6 +120,21 @@ export default function HomeScreen({ navigation }) {
       },
     );
   };
+
+  if (ListThing === null) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          height: '100%',
+          marginTop: '50%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -119,7 +163,7 @@ export default function HomeScreen({ navigation }) {
           {ListThing.map((thing) => {
             return (
               <ThingComponentScrollViewWrapper
-                includeThing={thing.includeThing}
+                includeThings={thing.includeThings}
                 titleCategory={thing.category}
               />
             );

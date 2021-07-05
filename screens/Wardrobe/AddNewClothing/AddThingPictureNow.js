@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import { Camera } from 'expo-camera';
 
 import { ActionSheet, Root } from 'native-base';
@@ -15,6 +23,9 @@ export default function AddThingPictureNow({ navigation }) {
   const [nameOfCategory, setNameOfCategory] = React.useState('Верхняя одежда');
   const [nameOfSeason, setNameOfSeason] = React.useState('Зима');
   const [selectedImage, setSelectedImage] = React.useState(null);
+  const [imageTobase64, setImageTobase64] = React.useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -24,8 +35,29 @@ export default function AddThingPictureNow({ navigation }) {
   }, []);
 
   const onSaveThing = () => {
-    navigation.goBack();
-    alert('Вещь в шкафу:)');
+    setIsLoading(() => true);
+    fetch(
+      `https://wardrobeapp.azurewebsites.net/CreateThing/1fdd05d8-3052-478b-95cb-aaf72b9b89e3`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({
+          ImageSrc: imageTobase64,
+          Season: nameOfSeason,
+          Category: nameOfCategory,
+        }),
+      },
+    ).then((response) => {
+      if (response.status === 200) {
+        navigation.goBack();
+        alert('Вещь в шкафу:)');
+        setIsLoading(false);
+      } else {
+        alert('Error');
+      }
+    });
   };
 
   const DropdownCategory = () => {
@@ -69,25 +101,40 @@ export default function AddThingPictureNow({ navigation }) {
   if (selectedImage != null) {
     return (
       <View style={styles.content}>
-        <View style={styles.contentImage}>
-          <View style={{ flexDirection: 'row', width: '100%' }}>
-            <Text style={styles.header}>Добавление вещи</Text>
-            <TouchableOpacity onPress={onSaveThing}>
-              <Text style={styles.bthSave}> Сохранить </Text>
-            </TouchableOpacity>
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              marginTop: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
           </View>
-          <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
-        </View>
-        <View style={styles.wrapperDropdown}>
-          <View style={styles.Dropdown}>
-            <Text style={styles.headerDropdown}>Категория</Text>
-            <DropdownCategory />
+        ) : (
+          <View>
+            <View style={styles.contentImage}>
+              <View style={{ flexDirection: 'row', width: '100%' }}>
+                <Text style={styles.header}>Добавление вещи</Text>
+                <TouchableOpacity onPress={onSaveThing}>
+                  <Text style={styles.bthSave}> Сохранить </Text>
+                </TouchableOpacity>
+              </View>
+              <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+            </View>
+            <View style={styles.wrapperDropdown}>
+              <View style={styles.Dropdown}>
+                <Text style={styles.headerDropdown}>Категория</Text>
+                <DropdownCategory />
+              </View>
+              <View style={styles.Dropdown}>
+                <Text style={styles.headerDropdown}>Сезон</Text>
+                <DropdownSeason />
+              </View>
+            </View>
           </View>
-          <View style={styles.Dropdown}>
-            <Text style={styles.headerDropdown}>Сезон</Text>
-            <DropdownSeason />
-          </View>
-        </View>
+        )}
       </View>
     );
   }
@@ -124,9 +171,10 @@ export default function AddThingPictureNow({ navigation }) {
             style={{ alignSelf: 'center' }}
             onPress={async () => {
               if (cameraRef) {
-                let photo = await cameraRef.takePictureAsync();
+                let photo = await cameraRef.takePictureAsync({ base64: true });
                 setSelectedImage({ localUri: photo.uri });
-                // console.log('photo', photo);
+
+                setImageTobase64(photo.base64);
               }
             }}>
             <View

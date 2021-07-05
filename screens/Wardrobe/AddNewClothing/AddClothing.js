@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { ActionSheet, Root } from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
+
+import * as FileSystem from 'expo-file-system';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -19,6 +22,10 @@ export default function AddClothing({ navigation }) {
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [nameOfCategory, setNameOfCategory] = React.useState('Верхняя одежда');
   const [nameOfSeason, setNameOfSeason] = React.useState('Зима');
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [imageTobase64, setImageTobase64] = React.useState(null);
 
   const onClickAddImage = () => {
     const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel'];
@@ -40,8 +47,25 @@ export default function AddClothing({ navigation }) {
   };
 
   const onSaveThing = () => {
-    navigation.goBack();
-    alert('Вещь в шкафу:)');
+    setIsLoading(() => true);
+    fetch(
+      `https://wardrobeapp.azurewebsites.net/CreateThing/1fdd05d8-3052-478b-95cb-aaf72b9b89e3`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({
+          ImageSrc: imageTobase64,
+          Season: nameOfSeason,
+          Category: nameOfCategory,
+        }),
+      },
+    ).then((response) => {
+      navigation.goBack();
+      alert('Вещь в шкафу:)');
+      setIsLoading(false);
+    });
   };
 
   let openImagePickerAsync = async () => {
@@ -52,15 +76,15 @@ export default function AddClothing({ navigation }) {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({ base64: true });
 
     if (pickerResult.cancelled === true) {
       return;
     }
 
     setSelectedImage({ localUri: pickerResult.uri });
+    setImageTobase64(pickerResult.base64);
   };
-
   const DropdownCategory = () => {
     return (
       <RNPickerSelect
@@ -94,26 +118,41 @@ export default function AddClothing({ navigation }) {
 
   if (selectedImage !== null) {
     return (
-      <View style={styles.content}>
-        <View style={styles.contentImage}>
-          <View style={{ flexDirection: 'row', width: '100%' }}>
-            <Text style={styles.header}>Добавление вещи</Text>
-            <TouchableOpacity onPress={onSaveThing}>
-              <Text style={styles.bthSave}> Сохранить </Text>
-            </TouchableOpacity>
+      <View>
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              marginTop: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
           </View>
-          <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
-        </View>
-        <View style={styles.wrapperDropdown}>
-          <View style={styles.Dropdown}>
-            <Text style={styles.headerDropdown}>Категория</Text>
-            <DropdownCategory />
+        ) : (
+          <View style={styles.content}>
+            <View style={styles.contentImage}>
+              <View style={{ flexDirection: 'row', width: '100%' }}>
+                <Text style={styles.header}>Добавление вещи</Text>
+                <TouchableOpacity onPress={onSaveThing}>
+                  <Text style={styles.bthSave}> Сохранить </Text>
+                </TouchableOpacity>
+              </View>
+              <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+            </View>
+            <View style={styles.wrapperDropdown}>
+              <View style={styles.Dropdown}>
+                <Text style={styles.headerDropdown}>Категория</Text>
+                <DropdownCategory />
+              </View>
+              <View style={styles.Dropdown}>
+                <Text style={styles.headerDropdown}>Сезон</Text>
+                <DropdownSeason />
+              </View>
+            </View>
           </View>
-          <View style={styles.Dropdown}>
-            <Text style={styles.headerDropdown}>Сезон</Text>
-            <DropdownSeason />
-          </View>
-        </View>
+        )}
       </View>
     );
   }
