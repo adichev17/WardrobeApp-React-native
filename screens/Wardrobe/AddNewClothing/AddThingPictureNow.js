@@ -6,12 +6,16 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  Platform,
+  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { Camera } from 'expo-camera';
 
 import { ActionSheet, Root } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -58,6 +62,38 @@ export default function AddThingPictureNow({ navigation }) {
         alert('Error');
       }
     });
+  };
+
+  const uploadImage = () => {
+    // Check selected image is not null
+    if (selectedImage.localUri !== null) {
+      const data = new FormData();
+      data.append('file', {
+        name: Date().toString() + '.jpg',
+        uri: selectedImage.localUri,
+        type: 'file',
+      });
+      AsyncStorage.getItem('id', (err, result) => {
+        if (result) {
+          fetch(`https://wardrobeapp.azurewebsites.net/loadImg/${result}`, {
+            method: 'POST',
+            body: data,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+            .then((res) => {
+              return res.json();
+            })
+            .then((date) => {
+              alert(JSON.stringify(date));
+            });
+        }
+      });
+    } else {
+      // Validation Alert
+      alert('Please Select image first');
+    }
   };
 
   const DropdownCategory = () => {
@@ -117,7 +153,7 @@ export default function AddThingPictureNow({ navigation }) {
             <View style={styles.contentImage}>
               <View style={{ flexDirection: 'row', width: '100%' }}>
                 <Text style={styles.header}>Добавление вещи</Text>
-                <TouchableOpacity onPress={onSaveThing}>
+                <TouchableOpacity onPress={uploadImage}>
                   <Text style={styles.bthSave}> Сохранить </Text>
                 </TouchableOpacity>
               </View>
