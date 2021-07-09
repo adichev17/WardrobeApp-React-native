@@ -6,8 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import addClothingStackScreen from './WardrobeNav';
 
 import Designer from '../screens/Designer/DesignerPage';
-import ProfileStackScreen from '../screens/Profile/ProfilePage';
-
+// import ProfileStackScreen from '../screens/Profile/ProfilePage';
+import ProfileStackScreen from './ProfileNav';
 const Tab = createBottomTabNavigator();
 
 export default function BottomNavScreen() {

@@ -23,19 +23,19 @@ import { ActionSheet, Root } from 'native-base';
 import { FAB } from 'react-native-elements';
 import { style } from 'styled-system';
 
-export default function HomeScreen({ navigation }) {
+export default function WardRobePage({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
   const [nameActiveCategory, setNameActiveCategory] = useState('Все вещи');
   const [isLoading, setIsLoading] = useState(false);
 
   const [ListThing, setListThing] = useState(null);
 
+  const [SortedListThing, setSortedListThing] = useState(null);
+
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
       if (result) {
-        fetch(
-          'https://wardrobeapp.azurewebsites.net/GetAllThings/1fdd05d8-3052-478b-95cb-aaf72b9b89e3',
-        )
+        fetch(`https://wardrobeapp.azurewebsites.net/GetAllThings/${result}`)
           .then((response) => {
             return response.json();
           })
@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation }) {
             if (data !== undefined) {
               setListThing(data);
               setIsLoading(false);
-              alert(data);
+              setSortedListThing(data);
             }
           });
       }
@@ -54,23 +54,48 @@ export default function HomeScreen({ navigation }) {
     GetAllThings();
   }, []);
 
+  useEffect(() => {
+    SortedForCategory();
+  }, [nameActiveCategory]);
+
+  const SortedForCategory = () => {
+    if (nameActiveCategory !== 'Все вещи' && ListThing !== null) {
+      let newList = [];
+      let sortCategory = ListThing.filter((name) => {
+        return name.category == nameActiveCategory;
+      })[0];
+      newList.push(sortCategory);
+      setSortedListThing(newList);
+      console.log('-------------------------');
+      console.log(sortCategory);
+    } else if (nameActiveCategory === 'Все вещи' && ListThing !== null) {
+      setSortedListThing(ListThing);
+    }
+  };
+
   const list = [
     {
       title: 'Все вещи',
       onPress: () => {
-        setIsVisible(false), setNameActiveCategory('Все вещи');
+        setNameActiveCategory('Все вещи'), setIsVisible(false);
       },
     },
     {
       title: 'Верхняя одежда',
       onPress: () => {
-        setIsVisible(false), setNameActiveCategory('Верхняя одежда');
+        setNameActiveCategory('Верхняя одежда'), setIsVisible(false);
       },
     },
     {
-      title: 'Штаны',
+      title: 'Обувь',
       onPress: () => {
-        setIsVisible(false), setNameActiveCategory('Штаны');
+        setIsVisible(false), setNameActiveCategory('Обувь');
+      },
+    },
+    {
+      title: 'Джинсы',
+      onPress: () => {
+        setIsVisible(false), setNameActiveCategory('Джинсы');
       },
     },
     {
@@ -81,47 +106,7 @@ export default function HomeScreen({ navigation }) {
     },
   ];
 
-  // const ListThing = [
-  //   {
-  //     category: 'Штаны',
-  //     includeThings: [
-  //       'https://shop4big.ru/image/cache/catalog/data/Bruki%20leto/Bryuki%20Leto%202017/meyer-bonn-5404-17-1-460x460.jpeg',
-  //       'https://li0.rightinthebox.com/images/500x500/201910/uwanqr1570525788498.jpg',
-  //       'https://indiastyle.ru/files_ru/products/original/14307-2213-6-3.jpg',
-  //     ],
-  //   },
-  //   {
-  //     category: 'Верхняя одежда',
-  //     includeThings: [
-  //       'https://homedorf.ru/upload/iblock/f32/f32e61630aaa46cbf656c6e4eae96756.jpg',
-  //       'https://www.vitoricci.ru/images/131865052562889531-2.jpg',
-  //       'https://avatars.mds.yandex.net/get-marketpic/364498/market_A7P6pT7Wb3sEQWBU840iMA/orig',
-  //     ],
-  //   },
-  //   {
-  //     category: 'Кроссовки',
-  //     includeThings: ['https://static.kupivip.ru/V0/04/09/02/00/3b.jpg'],
-  //   },
-  // ];
-
-  const onClickAddImage = () => {
-    const BUTTONS = ['Take Photo', 'Choose Photo Library', 'Cancel'];
-    ActionSheet.show(
-      { options: BUTTONS, cancelButtonIndex: 2, title: 'Select a Photo' },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            this.takePhotoFromCamera();
-          case 1:
-            openImagePickerAsync();
-          default:
-            break;
-        }
-      },
-    );
-  };
-
-  if (ListThing === null) {
+  if (ListThing === null || SortedListThing === null) {
     return (
       <View
         style={{
@@ -160,15 +145,15 @@ export default function HomeScreen({ navigation }) {
       </View>
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
-          {ListThing.map((thing) => {
+          {SortedListThing.map((thing, i) => {
             return (
               <ThingComponentScrollViewWrapper
+                key={i}
                 includeThings={thing.includeThings}
                 titleCategory={thing.category}
               />
             );
           })}
-          {/* <ScrollView style={styles.wrapperCategoryThing} horizontal={true}></ScrollView> */}
         </ScrollView>
       </SafeAreaView>
       <View

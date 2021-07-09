@@ -38,34 +38,9 @@ export default function AddThingPictureNow({ navigation }) {
     })();
   }, []);
 
-  const onSaveThing = () => {
-    setIsLoading(() => true);
-    fetch(
-      `https://wardrobeapp.azurewebsites.net/CreateThing/1fdd05d8-3052-478b-95cb-aaf72b9b89e3`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify({
-          ImageSrc: imageTobase64,
-          Season: nameOfSeason,
-          Category: nameOfCategory,
-        }),
-      },
-    ).then((response) => {
-      if (response.status === 200) {
-        navigation.goBack();
-        alert('Вещь в шкафу:)');
-        setIsLoading(false);
-      } else {
-        alert('Error');
-      }
-    });
-  };
-
   const uploadImage = () => {
     // Check selected image is not null
+    setIsLoading(true);
     if (selectedImage.localUri !== null) {
       const data = new FormData();
       data.append('file', {
@@ -73,6 +48,10 @@ export default function AddThingPictureNow({ navigation }) {
         uri: selectedImage.localUri,
         type: 'file',
       });
+
+      data.append('category', nameOfCategory);
+      data.append('season', nameOfSeason);
+
       AsyncStorage.getItem('id', (err, result) => {
         if (result) {
           fetch(`https://wardrobeapp.azurewebsites.net/loadImg/${result}`, {
@@ -83,10 +62,16 @@ export default function AddThingPictureNow({ navigation }) {
             },
           })
             .then((res) => {
+              if (res.status === 200) {
+                navigation.goBack();
+                Alert.alert('Превосходно', 'Вещь в шкафу.');
+              } else {
+                Alert.alert('Ошибка', 'Упс, что-то пошло не так...');
+              }
               return res.json();
             })
             .then((date) => {
-              alert(JSON.stringify(date));
+              setIsLoading(false);
             });
         }
       });
@@ -104,8 +89,24 @@ export default function AddThingPictureNow({ navigation }) {
         onValueChange={(value) => setNameOfCategory(value)}
         items={[
           { label: 'Верхняя одежда', value: 'Верхняя одежда' },
-          { label: 'Штаны', value: 'Штаны' },
-          { label: 'Носки', value: 'Носки' },
+          { label: 'Костюмы', value: 'Костюмы' },
+          { label: 'Обувь', value: 'Обувь' },
+          { label: 'Сумки', value: 'Сумки' },
+          { label: 'Пиджаки', value: 'Пиджаки' },
+          { label: 'Аксессуары', value: 'Аксессуары' },
+          { label: 'Толстовки и худи', value: 'Толстовки и худи' },
+          { label: 'Жилеты', value: 'Жилеты' },
+          { label: 'Свитеры и водолазки', value: 'Свитеры и водолазки' },
+          { label: 'Рубашки и сорочки', value: 'Рубашки и сорочки' },
+          { label: 'Футболки и поло', value: 'Футболки и поло' },
+          { label: 'Брюки', value: 'Брюки' },
+          { label: 'Джинсы', value: 'Джинсы' },
+          { label: 'Шорты', value: 'Шорты' },
+          { label: 'Спортивная одежда', value: 'Спортивная одежда' },
+          { label: 'Домашняя одежда', value: 'Домашняя одежда' },
+          { label: 'Пляжная одежда', value: 'Пляжная одежда' },
+          { label: 'Носки и гетры', value: 'Носки и гетры' },
+          { label: 'Нижнее бельё', value: 'Нижнее бельё' },
         ]}>
         <Text style={styles.DropdownText}>{nameOfCategory}</Text>
       </RNPickerSelect>
@@ -121,6 +122,7 @@ export default function AddThingPictureNow({ navigation }) {
           { label: 'Зима', value: 'Зима' },
           { label: 'Весна', value: 'Весна' },
           { label: 'Лето', value: 'Лето' },
+          { label: 'Осень', value: 'Осень' },
         ]}>
         <Text style={styles.DropdownText}>{nameOfSeason}</Text>
       </RNPickerSelect>

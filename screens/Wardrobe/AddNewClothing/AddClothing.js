@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { ActionSheet, Root } from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as FileSystem from 'expo-file-system';
 
@@ -46,26 +49,47 @@ export default function AddClothing({ navigation }) {
     );
   };
 
-  const onSaveThing = () => {
-    setIsLoading(() => true);
-    fetch(
-      `https://wardrobeapp.azurewebsites.net/CreateThing/1fdd05d8-3052-478b-95cb-aaf72b9b89e3`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify({
-          ImageSrc: imageTobase64,
-          Season: nameOfSeason,
-          Category: nameOfCategory,
-        }),
-      },
-    ).then((response) => {
-      navigation.goBack();
-      alert('Вещь в шкафу:)');
-      setIsLoading(false);
-    });
+  const uploadImage = () => {
+    // Check selected image is not null
+    setIsLoading(true);
+    if (selectedImage.localUri !== null) {
+      const data = new FormData();
+      data.append('file', {
+        name: Date().toString() + '.jpg',
+        uri: selectedImage.localUri,
+        type: 'file',
+      });
+
+      data.append('category', nameOfCategory);
+      data.append('season', nameOfSeason);
+
+      AsyncStorage.getItem('id', (err, result) => {
+        if (result) {
+          fetch(`https://wardrobeapp.azurewebsites.net/loadImg/${result}`, {
+            method: 'POST',
+            body: data,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+            .then((res) => {
+              if (res.status === 200) {
+                navigation.goBack();
+                Alert.alert('Превосходно', 'Вещь в шкафу.');
+              } else {
+                Alert.alert('Ошибка', 'Упс, что-то пошло не так...');
+              }
+              return res.json();
+            })
+            .then((date) => {
+              setIsLoading(false);
+            });
+        }
+      });
+    } else {
+      // Validation Alert
+      alert('Please Select image first');
+    }
   };
 
   let openImagePickerAsync = async () => {
@@ -93,8 +117,24 @@ export default function AddClothing({ navigation }) {
         onValueChange={(value) => setNameOfCategory(value)}
         items={[
           { label: 'Верхняя одежда', value: 'Верхняя одежда' },
-          { label: 'Штаны', value: 'Штаны' },
-          { label: 'Носки', value: 'Носки' },
+          { label: 'Костюмы', value: 'Костюмы' },
+          { label: 'Обувь', value: 'Обувь' },
+          { label: 'Сумки', value: 'Сумки' },
+          { label: 'Пиджаки', value: 'Пиджаки' },
+          { label: 'Аксессуары', value: 'Аксессуары' },
+          { label: 'Толстовки и худи', value: 'Толстовки и худи' },
+          { label: 'Жилеты', value: 'Жилеты' },
+          { label: 'Свитеры и водолазки', value: 'Свитеры и водолазки' },
+          { label: 'Рубашки и сорочки', value: 'Рубашки и сорочки' },
+          { label: 'Футболки и поло', value: 'Футболки и поло' },
+          { label: 'Брюки', value: 'Брюки' },
+          { label: 'Джинсы', value: 'Джинсы' },
+          { label: 'Шорты', value: 'Шорты' },
+          { label: 'Спортивная одежда', value: 'Спортивная одежда' },
+          { label: 'Домашняя одежда', value: 'Домашняя одежда' },
+          { label: 'Пляжная одежда', value: 'Пляжная одежда' },
+          { label: 'Носки и гетры', value: 'Носки и гетры' },
+          { label: 'Нижнее бельё', value: 'Нижнее бельё' },
         ]}>
         <Text style={styles.DropdownText}>{nameOfCategory}</Text>
       </RNPickerSelect>
@@ -135,7 +175,7 @@ export default function AddClothing({ navigation }) {
             <View style={styles.contentImage}>
               <View style={{ flexDirection: 'row', width: '100%' }}>
                 <Text style={styles.header}>Добавление вещи</Text>
-                <TouchableOpacity onPress={onSaveThing}>
+                <TouchableOpacity onPress={uploadImage}>
                   <Text style={styles.bthSave}> Сохранить </Text>
                 </TouchableOpacity>
               </View>

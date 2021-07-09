@@ -8,6 +8,7 @@ export default function ThingWrapper({ thing }) {
         style={styles.tinyLogo}
         source={{
           uri: thing,
+          cache: 'force-cache',
         }}
       />
     </View>
