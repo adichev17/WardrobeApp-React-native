@@ -13,8 +13,8 @@ export default function ThingComponentScrollViewWrapper({ includeThings, titleCa
         <Text></Text>
       )}
       <ScrollView style={styles.wrapperCategoryThing} horizontal={true}>
-        {includeThings.map((thing) => {
-          return <ThingWrapper thing={thing} />;
+        {includeThings.map((thing, i) => {
+          return <ThingWrapper thing={thing} i={i} />;
         })}
       </ScrollView>
     </View>
