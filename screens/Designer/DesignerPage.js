@@ -1,60 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
-import Button from '../../components/button';
+import { StyleSheet, View, FlatList, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ThingWrapper from '../Wardrobe/Components/ThingWrapper';
 import CategoryScrollView from './ComponentsDesignerPages/TitleCategoryScrollView';
 
+// const DATA = [
+//   {
+//     category: 'Верхняя одежда',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
+//     id: 1,
+//   },
+//   {
+//     category: 'Аксессуары',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+//     id: 2,
+//   },
+//   {
+//     category: 'Шорты',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Fri Jul 09 2021 14:43:40 GMT+0300 (MSK).jpg',
+//     id: 3,
+//   },
+//   {
+//     category: 'Обувь',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+//     id: 4,
+//   },
+//   {
+//     category: 'Толстовки и худи',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+//     id: 5,
+//   },
+//   {
+//     category: 'Нижнее бельё',
+//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+//     id: 6,
+//   },
+// ];
 const DATA = [
-  {
-    category: 'Верхняя одежда',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
-    id: 1,
-  },
-  {
-    category: 'Аксессуары',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-    id: 2,
-  },
-  {
-    category: 'Шорты',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Fri Jul 09 2021 14:43:40 GMT+0300 (MSK).jpg',
-    id: 3,
-  },
-  {
-    category: 'Обувь',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-    id: 4,
-  },
-  {
-    category: 'Толстовки и худи',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-    id: 5,
-  },
-  {
-    category: 'Нижнее бельё',
-    uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-    id: 5,
-  },
+  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
+  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+  'https://wardrobeapp.azurewebsites.net/Images/Fri Jul 09 2021 14:43:40 GMT+0300 (MSK).jpg',
+  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
+  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
 ];
-
-const Item = ({ title }) => (
+const Item = ({ uri }) => (
   <View style={styles.item}>
     <Image
       style={styles.tinyLogo}
       source={{
-        uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:53:24 GMT+0300 (MSK).jpg',
+        uri: uri,
         // cache: 'force-cache',
       }}
     />
@@ -63,12 +57,15 @@ const Item = ({ title }) => (
 
 export default function DesiggerPage({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [nameActiveCategory, setNameActiveCategory] = useState('Все вещи');
   const [ListThing, setListThing] = useState(null);
 
   const [SortedListThing, setSortedListThing] = useState(null);
 
   const [listThingSRCArray, setListThingSRCArray] = useState(null);
+
+  const [ThingsInConstructor, setThingsInConstructor] = useState(null);
+
+  const [Data, setData] = useState(null);
 
   const ToListSRCArray = (data) => {
     let ListSRC = [];
@@ -79,6 +76,24 @@ export default function DesiggerPage({ navigation }) {
     });
     return ListSRC;
   };
+  useEffect(() => {
+    if (Data !== null && ThingsInConstructor !== null) {
+      let NewData = Data.slice(0);
+      let i = NewData.indexOf(ThingsInConstructor);
+
+      if (i === -1 && Data.length < 6) {
+        NewData.push(ThingsInConstructor);
+        setData(NewData);
+      } else {
+        NewData.splice(i, 1);
+        setData(NewData);
+      }
+    } else if (ThingsInConstructor !== null && Data === null) {
+      let ThingArray = [];
+      ThingArray.push(ThingsInConstructor);
+      setData(ThingArray);
+    }
+  }, [ThingsInConstructor]);
 
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
@@ -103,7 +118,7 @@ export default function DesiggerPage({ navigation }) {
     GetAllThings();
   }, []);
 
-  const renderItem = ({ item }) => <Item title={item.category} />;
+  const renderItem = ({ item }) => <Item uri={item} />;
 
   if (ListThing === null || SortedListThing === null) {
     return (
@@ -124,9 +139,9 @@ export default function DesiggerPage({ navigation }) {
     <SafeAreaView>
       <FlatList
         style={styles.container}
-        data={DATA}
+        data={Data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.uri}
         numColumns={2}
       />
       <SafeAreaView>
@@ -134,6 +149,7 @@ export default function DesiggerPage({ navigation }) {
           _ListThing={ListThing}
           _SortedListThing={SortedListThing}
           _listThingSRCArray={listThingSRCArray}
+          setThingsInConstructor={setThingsInConstructor}
         />
       </SafeAreaView>
     </SafeAreaView>
@@ -144,8 +160,6 @@ const styles = StyleSheet.create({
   container: {
     height: '60%',
     marginVertical: 20,
-    // marginHorizontal: 30,
-    // alignItems: 'center',
     borderBottomColor: 'blue',
     borderBottomWidth: 2,
   },

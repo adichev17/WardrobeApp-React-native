@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView, Text, Image, View, TouchableOpacity } from 'react-native';
 
-export default function ThingWrapper({ thing, index }) {
+export default function ThingWrapper({ thing, index, setThingsInConstructor }) {
   const [count, setCount] = useState();
 
   const AddToDesigner = (src) => {
-    console.log(src);
+    // console.log(src);
+    setThingsInConstructor(src);
   };
   return (
     <View style={styles.wrapper}>

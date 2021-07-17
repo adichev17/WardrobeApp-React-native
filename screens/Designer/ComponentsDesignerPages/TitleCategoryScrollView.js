@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, Text, View, SafeAreaView } from 'react-native';
 import ThingComponentScrollViewWrapper from './ThingComponentScrollViewWrapper';
-import ThingWrapper from './ThingWrapper';
 
-export default function CategoryScrollView({ _ListThing, _SortedListThing, _listThingSRCArray }) {
+export default function CategoryScrollView({
+  _ListThing,
+  _SortedListThing,
+  _listThingSRCArray,
+  setThingsInConstructor,
+}) {
   const [nameActiveCategory, setNameActiveCategory] = useState('Все вещи');
   const [ListThing, setListThing] = useState(_ListThing);
   const [SortedListThing, setSortedListThing] = useState(_SortedListThing);
-
-  const [IndexFromList, setIndexFromList] = useState(0);
 
   useEffect(() => {
     SortedForCategory();
@@ -51,18 +53,12 @@ export default function CategoryScrollView({ _ListThing, _SortedListThing, _list
       let sortCategory = ListThing.filter((name) => {
         return name.category == nameActiveCategory;
       })[0];
-      //   if (sortCategory === undefined || sortCategory === null) {
-      //     sortCategory = [];
-      //   }
       newList.push(sortCategory);
       setSortedListThing(newList);
-      // console.log('-------------------------');
-      // console.log(sortCategory);
     } else if (nameActiveCategory === 'Все вещи' && ListThing !== null) {
       setSortedListThing(ListThing);
     }
   };
-  // console.log(SortedListThing);
 
   return (
     <View>
@@ -92,7 +88,7 @@ export default function CategoryScrollView({ _ListThing, _SortedListThing, _list
               <ThingComponentScrollViewWrapper
                 includeThings={el.includeThings}
                 titleCategory={''}
-                index={i}
+                setThingsInConstructor={setThingsInConstructor}
               />
             );
           })}

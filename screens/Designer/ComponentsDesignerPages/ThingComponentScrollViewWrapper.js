@@ -2,7 +2,11 @@ import React from 'react';
 import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import ThingWrapper from './ThingWrapper';
 
-export default function ThingComponentScrollViewWrapper({ includeThings, titleCategory }) {
+export default function ThingComponentScrollViewWrapper({
+  includeThings,
+  titleCategory,
+  setThingsInConstructor,
+}) {
   return (
     <View>
       {titleCategory.length > 0 ? (
@@ -14,7 +18,9 @@ export default function ThingComponentScrollViewWrapper({ includeThings, titleCa
       )}
       <ScrollView style={styles.wrapperCategoryThing} horizontal={true}>
         {includeThings.map((thing, i) => {
-          return <ThingWrapper thing={thing} i={i} />;
+          return (
+            <ThingWrapper thing={thing} i={i} setThingsInConstructor={setThingsInConstructor} />
+          );
         })}
       </ScrollView>
     </View>
@@ -25,7 +31,6 @@ const styles = StyleSheet.create({
   wrapperCategoryThing: {
     height: 180,
     width: '100%',
-    // backgroundColor: '#ffffff',
     marginVertical: '2%',
   },
   titleCategory: {
