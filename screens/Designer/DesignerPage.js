@@ -1,48 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, Image, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  SafeAreaView,
+  Image,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryScrollView from './ComponentsDesignerPages/TitleCategoryScrollView';
 
-// const DATA = [
-//   {
-//     category: 'Верхняя одежда',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
-//     id: 1,
-//   },
-//   {
-//     category: 'Аксессуары',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-//     id: 2,
-//   },
-//   {
-//     category: 'Шорты',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Fri Jul 09 2021 14:43:40 GMT+0300 (MSK).jpg',
-//     id: 3,
-//   },
-//   {
-//     category: 'Обувь',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-//     id: 4,
-//   },
-//   {
-//     category: 'Толстовки и худи',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-//     id: 5,
-//   },
-//   {
-//     category: 'Нижнее бельё',
-//     uri: 'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-//     id: 6,
-//   },
-// ];
-const DATA = [
-  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
-  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-  'https://wardrobeapp.azurewebsites.net/Images/Fri Jul 09 2021 14:43:40 GMT+0300 (MSK).jpg',
-  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-  'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-];
+import FlatListGridFor3Items from './ComponentsDesignerPages/GridThing/FlatListGridFor3Items';
+import FlatListGridFor4Items from './ComponentsDesignerPages/GridThing/FlatListGridFor4Items';
+
 const Item = ({ uri }) => (
   <View style={styles.item}>
     <Image
@@ -76,16 +47,16 @@ export default function DesiggerPage({ navigation }) {
     });
     return ListSRC;
   };
+
   useEffect(() => {
     if (Data !== null && ThingsInConstructor !== null) {
-      let NewData = Data.slice(0);
+      let NewData = Data.slice();
       let i = NewData.indexOf(ThingsInConstructor);
-
-      if (i === -1 && Data.length < 6) {
+      if (i === -1) {
         NewData.push(ThingsInConstructor);
         setData(NewData);
       } else {
-        NewData.splice(i, 1);
+        let UpdArray = NewData.splice(i, 1);
         setData(NewData);
       }
     } else if (ThingsInConstructor !== null && Data === null) {
@@ -94,6 +65,8 @@ export default function DesiggerPage({ navigation }) {
       setData(ThingArray);
     }
   }, [ThingsInConstructor]);
+
+  // console.log(Data);
 
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
@@ -137,13 +110,26 @@ export default function DesiggerPage({ navigation }) {
 
   return (
     <SafeAreaView>
-      <FlatList
-        style={styles.container}
-        data={Data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.uri}
-        numColumns={2}
-      />
+      {Data === null || Data.length > 4 ? (
+        <FlatList
+          style={styles.container}
+          data={Data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.uri}
+          numColumns={2}
+        />
+      ) : Data.length <= 3 ? (
+        <View style={styles.container}>
+          <FlatListGridFor3Items Data={Data} />
+        </View>
+      ) : Data.length === 4 ? (
+        <View style={styles.container}>
+          <FlatListGridFor4Items Data={Data} />
+        </View>
+      ) : (
+        <Text>Начните добавлять вещи.</Text>
+      )}
+
       <SafeAreaView>
         <CategoryScrollView
           _ListThing={ListThing}
@@ -160,8 +146,9 @@ const styles = StyleSheet.create({
   container: {
     height: '60%',
     marginVertical: 20,
-    borderBottomColor: 'blue',
-    borderBottomWidth: 2,
+    borderBottomColor: 'black',
+    borderBottomWidth: 0.5,
+    marginHorizontal: '3%',
   },
   containerForTitleCategory: {
     width: '100%',
@@ -173,7 +160,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   item: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: '#ffffff',
+    borderWidth: 0.5,
+    borderColor: 'gray',
     marginVertical: 8,
     height: 130,
     width: '35%',

@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   containerForTitleCategory: {
     width: '100%',
     marginHorizontal: '3%',
+    marginBottom: '3%',
   },
   scrollViewForTitleCategory: {
     backgroundColor: 'pink',

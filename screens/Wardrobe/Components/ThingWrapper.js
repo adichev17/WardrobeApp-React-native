@@ -23,5 +23,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     marginHorizontal: 10,
+    borderWidth: 0.5,
+    borderColor: 'gray',
   },
 });
