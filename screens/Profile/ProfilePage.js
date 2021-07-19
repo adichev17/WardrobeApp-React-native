@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Avatar } from 'react-native-elements';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AuthContex } from '../../components/contex';
 import AsyncStorage from '@react-native-async-storage/async-storage';

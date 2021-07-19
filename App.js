@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { View } from 'react-native';
@@ -15,9 +14,6 @@ export default function App({ navigation }) {
     userName: null,
     userToken: null,
   };
-  // AsyncStorage.removeItem('userToken');
-  // AsyncStorage.removeItem('user');
-  // AsyncStorage.removeItem('id');
   loginReducer = (prevState, action) => {
     switch (action.type) {
       case 'RETRIEVE_TOKEN':

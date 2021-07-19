@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, Image, View } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 
 export default function ThingWrapper({ thing }) {
   return (
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 150,
     height: 180,
-    // marginLeft: '2%',
   },
   wrapper: {
     marginHorizontal: 10,

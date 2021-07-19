@@ -13,6 +13,7 @@ import CategoryScrollView from './ComponentsDesignerPages/TitleCategoryScrollVie
 
 import FlatListGridFor3Items from './ComponentsDesignerPages/GridThing/FlatListGridFor3Items';
 import FlatListGridFor4Items from './ComponentsDesignerPages/GridThing/FlatListGridFor4Items';
+import FlatListGridForMore4Items from './ComponentsDesignerPages/GridThing/FlatListGridForMore4Items';
 
 const Item = ({ uri }) => (
   <View style={styles.item}>
@@ -66,8 +67,6 @@ export default function DesiggerPage({ navigation }) {
     }
   }, [ThingsInConstructor]);
 
-  // console.log(Data);
-
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
       if (result) {
@@ -111,13 +110,9 @@ export default function DesiggerPage({ navigation }) {
   return (
     <SafeAreaView>
       {Data === null || Data.length > 4 ? (
-        <FlatList
-          style={styles.container}
-          data={Data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.uri}
-          numColumns={2}
-        />
+        <View style={styles.container}>
+          <FlatListGridForMore4Items Data={Data} />
+        </View>
       ) : Data.length <= 3 ? (
         <View style={styles.container}>
           <FlatListGridFor3Items Data={Data} />

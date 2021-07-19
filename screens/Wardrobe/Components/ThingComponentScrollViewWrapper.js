@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
   wrapperCategoryThing: {
     height: 180,
     width: '100%',
-    // backgroundColor: '#ffffff',
     marginVertical: '2%',
   },
   titleCategory: {

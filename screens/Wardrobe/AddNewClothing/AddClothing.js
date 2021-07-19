@@ -1,9 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   TouchableOpacity,
   Dimensions,
   Image,
@@ -11,13 +10,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { ActionSheet, Root } from 'native-base';
-import ImageCropPicker from 'react-native-image-crop-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import * as FileSystem from 'expo-file-system';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -256,7 +252,6 @@ const styles = StyleSheet.create({
   Dropdown: {
     marginTop: '10%',
     width: '80%',
-    // backgroundColor:"#000000"
   },
   DropdownText: {
     color: 'gray',

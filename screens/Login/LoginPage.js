@@ -1,19 +1,8 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  BackHandler,
-  Alert,
-  ImageBackground,
-  ActivityIndicator,
-} from 'react-native';
-import { StackActions } from '@react-navigation/native';
+import { useState } from 'react';
+import { Text, View, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { isPasswordValid } from '../../src/Validation/Valid';
-import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContex } from '../../components/contex';
 

@@ -3,8 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageBackground,
-  TouchableOpacity,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -13,15 +11,11 @@ import {
 import { BottomSheet, ListItem, Button } from 'react-native-elements';
 import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AddClothing from './AddNewClothing/AddClothing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ThingComponentScrollViewWrapper from './Components/ThingComponentScrollViewWrapper';
 
-import { ActionSheet, Root } from 'native-base';
-
 import { FAB } from 'react-native-elements';
-import { style } from 'styled-system';
 
 export default function WardRobePage({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -210,7 +204,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   scrollView: {
-    // backgroundColor: '#ffffff',
     marginHorizontal: 0,
     width: '100%',
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import Button from '../../components/button';
 
 export default function HomeScreen({ navigation }) {
@@ -40,7 +40,6 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   imgBackground: {
     height: '100%',
-    // justifyContent: 'space-evenly',
   },
   WrapperButtons: {
     marginTop: '60%',

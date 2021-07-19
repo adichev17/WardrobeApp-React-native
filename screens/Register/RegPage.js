@@ -1,15 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  CheckBox,
-  Alert,
-  TouchableOpacity,
-  ImageBackground,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, Alert, ImageBackground, ActivityIndicator } from 'react-native';
 import { isPasswordValid } from '../../src/Validation/Valid';
 import { Input, Button } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
@@ -22,8 +13,6 @@ export default function RegScreen({ navigation }) {
   const [inputPhoneNumber, setInputPhoneNumber] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-
-  const [Test, setTest] = useState('');
 
   const Registrarion = () => {
     setIsLoading(true);
