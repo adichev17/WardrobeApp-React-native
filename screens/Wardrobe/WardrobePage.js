@@ -26,6 +26,8 @@ export default function WardRobePage({ navigation }) {
 
   const [SortedListThing, setSortedListThing] = useState(null);
 
+  const [ListCategory, setListCategory] = useState(null);
+
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
       if (result) {
@@ -44,14 +46,6 @@ export default function WardRobePage({ navigation }) {
     });
   };
 
-  useEffect(() => {
-    GetAllThings();
-  }, []);
-
-  useEffect(() => {
-    SortedForCategory();
-  }, [nameActiveCategory]);
-
   const SortedForCategory = () => {
     if (nameActiveCategory !== 'Все вещи' && ListThing !== null) {
       let newList = [];
@@ -67,38 +61,45 @@ export default function WardRobePage({ navigation }) {
     }
   };
 
-  const list = [
-    {
-      title: 'Все вещи',
-      onPress: () => {
+  useEffect(() => {
+    GetAllThings();
+  }, []);
+
+  useEffect(() => {
+    SortedForCategory();
+  }, [nameActiveCategory]);
+
+  useEffect(() => {
+    if (ListThing !== null) {
+      let ListTitleCategorys = [];
+      let TitleAllThing = {};
+
+      TitleAllThing['title'] = 'Все вещи';
+      TitleAllThing['onPress'] = () => {
         setNameActiveCategory('Все вещи'), setIsVisible(false);
-      },
-    },
-    {
-      title: 'Верхняя одежда',
-      onPress: () => {
-        setNameActiveCategory('Верхняя одежда'), setIsVisible(false);
-      },
-    },
-    {
-      title: 'Обувь',
-      onPress: () => {
-        setIsVisible(false), setNameActiveCategory('Обувь');
-      },
-    },
-    {
-      title: 'Джинсы',
-      onPress: () => {
-        setIsVisible(false), setNameActiveCategory('Джинсы');
-      },
-    },
-    {
-      title: 'Выйти из меню',
-      containerStyle: { backgroundColor: 'red' },
-      titleStyle: { color: 'white' },
-      onPress: () => setIsVisible(false),
-    },
-  ];
+      };
+      ListTitleCategorys.push(TitleAllThing);
+
+      ListThing.map((el) => {
+        let TitleCategory = {};
+        TitleCategory['title'] = el.category;
+        TitleCategory['onPress'] = () => {
+          setNameActiveCategory(el.category), setIsVisible(false);
+        };
+        ListTitleCategorys.push(TitleCategory);
+      });
+
+      let TitleExit = {};
+      TitleExit['title'] = 'Выйти из меню';
+      TitleExit['containerStyle'] = { backgroundColor: 'red' };
+      TitleExit['titleStyle'] = { color: 'white' };
+      TitleExit['onPress'] = () => setIsVisible(false);
+
+      ListTitleCategorys.push(TitleExit);
+
+      setListCategory(ListTitleCategorys);
+    }
+  }, [ListThing]);
 
   if (ListThing === null || SortedListThing === null) {
     return (
@@ -128,13 +129,17 @@ export default function WardRobePage({ navigation }) {
         <BottomSheet
           isVisible={isVisible}
           containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}>
-          {list.map((l, i) => (
-            <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
-              <ListItem.Content>
-                <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
-          ))}
+          {ListCategory !== null ? (
+            ListCategory.map((l, i) => (
+              <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
+                <ListItem.Content>
+                  <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            ))
+          ) : (
+            <Text></Text>
+          )}
         </BottomSheet>
       </View>
       <SafeAreaView style={styles.container}>

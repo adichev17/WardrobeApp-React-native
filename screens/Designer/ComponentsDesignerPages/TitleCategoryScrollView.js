@@ -12,41 +12,34 @@ export default function CategoryScrollView({
   const [ListThing, setListThing] = useState(_ListThing);
   const [SortedListThing, setSortedListThing] = useState(_SortedListThing);
 
+  const [ListCategory, setListCategory] = useState(null);
+
+  useEffect(() => {
+    let ListTitleCategorys = [];
+    let TitleAllThing = {};
+
+    TitleAllThing['title'] = 'Все вещи';
+    TitleAllThing['onPress'] = () => {
+      setNameActiveCategory('Все вещи');
+    };
+    ListTitleCategorys.push(TitleAllThing);
+
+    ListThing.map((el) => {
+      let TitleCategory = {};
+      TitleCategory['title'] = el.category;
+      TitleCategory['onPress'] = () => {
+        setNameActiveCategory(el.category);
+      };
+      ListTitleCategorys.push(TitleCategory);
+    });
+
+    setListCategory(ListTitleCategorys);
+  }, []);
+
   useEffect(() => {
     SortedForCategory();
   }, [nameActiveCategory]);
-  const list = [
-    {
-      title: 'Все вещи',
-      onPress: () => {
-        setNameActiveCategory('Все вещи');
-      },
-    },
-    {
-      title: 'Верхняя одежда',
-      onPress: () => {
-        setNameActiveCategory('Верхняя одежда');
-      },
-    },
-    {
-      title: 'Аксессуары',
-      onPress: () => {
-        setNameActiveCategory('Аксессуары');
-      },
-    },
-    {
-      title: 'Обувь',
-      onPress: () => {
-        setNameActiveCategory('Обувь');
-      },
-    },
-    {
-      title: 'Толстовки и худи',
-      onPress: () => {
-        setNameActiveCategory('Толстовки и худи');
-      },
-    },
-  ];
+
   const SortedForCategory = () => {
     if (nameActiveCategory !== 'Все вещи' && ListThing !== null) {
       let newList = [];
@@ -69,15 +62,19 @@ export default function CategoryScrollView({
           disableIntervalMomentum={true}
           disableScrollViewPanResponder={true}
           style={styles.scrollView}>
-          {list.map((el, i) => {
-            return (
-              <View>
-                <Text onPress={el.onPress} style={styles.titleCategory}>
-                  {el.title}
-                </Text>
-              </View>
-            );
-          })}
+          {ListCategory !== null ? (
+            ListCategory.map((el, i) => {
+              return (
+                <View>
+                  <Text onPress={el.onPress} style={styles.titleCategory}>
+                    {el.title}
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text> </Text>
+          )}
         </ScrollView>
       </SafeAreaView>
 
