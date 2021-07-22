@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import Wardrobe from '../screens/Wardrobe/WardrobePage';
 import addClothingStackScreen from './WardrobeNav';
 
-import Designer from '../screens/Designer/DesignerPage';
+import DesignerStackScreen from './DesignerNav';
 // import ProfileStackScreen from '../screens/Profile/ProfilePage';
 import ProfileStackScreen from './ProfileNav';
 const Tab = createBottomTabNavigator();
@@ -33,7 +33,7 @@ export default function BottomNavScreen() {
         },
       })}>
       <Tab.Screen name="Шкаф" component={addClothingStackScreen} />
-      <Tab.Screen name="Конструктор" component={Designer} />
+      <Tab.Screen name="Конструктор" component={DesignerStackScreen} />
       <Tab.Screen name="Профиль" component={ProfileStackScreen} />
     </Tab.Navigator>
   );

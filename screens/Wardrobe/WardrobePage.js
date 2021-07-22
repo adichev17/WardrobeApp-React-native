@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  RefreshControl,
   ActivityIndicator,
 } from 'react-native';
 import { BottomSheet, ListItem, Button } from 'react-native-elements';
@@ -17,6 +18,10 @@ import ThingComponentScrollViewWrapper from './Components/ThingComponentScrollVi
 
 import { FAB } from 'react-native-elements';
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
 export default function WardRobePage({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
   const [nameActiveCategory, setNameActiveCategory] = useState('Все вещи');
@@ -27,6 +32,13 @@ export default function WardRobePage({ navigation }) {
   const [SortedListThing, setSortedListThing] = useState(null);
 
   const [ListCategory, setListCategory] = useState(null);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const GetAllThings = () => {
     AsyncStorage.getItem('id', (err, result) => {
@@ -117,6 +129,10 @@ export default function WardRobePage({ navigation }) {
   }
 
   return (
+    // <SafeAreaView style={styles.containerPage}>
+    //   <ScrollView
+    //     contentContainerStyle={styles.scrollViewPage}
+    //     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
     <View style={styles.wrapper}>
       <View style={{ flex: 1 }}>
         <Text style={styles.header}>Ваш гардероб</Text>
@@ -179,6 +195,8 @@ export default function WardRobePage({ navigation }) {
         />
       </View>
     </View>
+    //   </ScrollView>
+    // </SafeAreaView>
   );
 }
 
@@ -207,6 +225,7 @@ const styles = StyleSheet.create({
     flex: 4,
     paddingTop: StatusBar.currentHeight,
     zIndex: 1,
+    // marginTop: '5%',
   },
   scrollView: {
     marginHorizontal: 0,
@@ -219,5 +238,8 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     backgroundColor: '#ffffff',
+  },
+  containerPage: {
+    flex: 1,
   },
 });

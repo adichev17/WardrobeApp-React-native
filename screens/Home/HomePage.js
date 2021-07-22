@@ -7,6 +7,7 @@ export default function HomeScreen({ navigation }) {
     <View style={{}}>
       <ImageBackground
         source={require('../../src/bgmain.jpg')}
+        cache="force-cache"
         style={styles.imgBackground}
         resizeMode="cover">
         <View style={styles.wrapperMainInfo}>

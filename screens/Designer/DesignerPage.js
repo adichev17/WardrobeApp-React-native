@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
-  FlatList,
+  TouchableOpacity,
   SafeAreaView,
   Image,
+  Alert,
   ActivityIndicator,
   Text,
 } from 'react-native';
+import { FAB } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryScrollView from './ComponentsDesignerPages/TitleCategoryScrollView';
 
@@ -90,18 +93,16 @@ export default function DesiggerPage({ navigation }) {
     GetAllThings();
   }, []);
 
+  const SaveImages = () => {
+    setData(null);
+    Alert.alert('Успешно', 'Образ сохранён.');
+  };
+
   const renderItem = ({ item }) => <Item uri={item} />;
 
   if (ListThing === null || SortedListThing === null) {
     return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          marginTop: '50%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.ActivityIndicator}>
         <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
       </View>
     );
@@ -109,6 +110,14 @@ export default function DesiggerPage({ navigation }) {
 
   return (
     <SafeAreaView>
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <Text style={styles.headerTitle}>Конструктор</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Looks')}>
+          <Text>Образы</Text>
+        </TouchableOpacity>
+      </View>
       {Data === null || Data.length > 4 ? (
         <View style={styles.container}>
           <FlatListGridForMore4Items Data={Data} />
@@ -133,6 +142,16 @@ export default function DesiggerPage({ navigation }) {
           setThingsInConstructor={setThingsInConstructor}
         />
       </SafeAreaView>
+      <View style={styles.wrapperFAB}>
+        <FAB
+          icon={<Icon name="angle-double-down" size={23} color="black" />}
+          titleStyle={{ color: 'black' }}
+          buttonStyle={styles.ButtonFAB}
+          onPress={() => {
+            SaveImages();
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -167,5 +186,39 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+  },
+  ActivityIndicator: {
+    flex: 1,
+    height: '100%',
+    marginTop: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ButtonFAB: {
+    // borderRadius: '5%',
+    width: 55,
+    height: 55,
+    backgroundColor: '#A59191',
+  },
+  wrapperFAB: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    bottom: 10,
+    right: 5,
+    zIndex: 2,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginVertical: '2%',
+    borderBottomColor: 'black',
+    borderBottomWidth: 0.5,
+    marginHorizontal: '3%',
+    paddingBottom: 5,
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    color: '#699CDE',
   },
 });

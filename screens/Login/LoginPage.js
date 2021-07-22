@@ -18,6 +18,7 @@ export default function LoginScreen({ route, navigation }) {
       <ImageBackground
         source={require('../../src/bgLogin.jpg')}
         style={styles.wrapperPage}
+        cache="force-cache"
         resizeMode="cover">
         {isLoading ? (
           <View
