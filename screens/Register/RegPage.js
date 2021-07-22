@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Alert, ImageBackground, ActivityIndicator } fro
 import { isPasswordValid } from '../../src/Validation/Valid';
 import { Input, Button } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
+import Loader from '../../components/Loader';
 
 export default function RegScreen({ navigation }) {
   const [inputName, setInputName] = useState('');
@@ -46,15 +47,7 @@ export default function RegScreen({ navigation }) {
         style={styles.wrapperPage}
         resizeMode="cover">
         {isLoading ? (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '50%',
-            }}>
-            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-          </View>
+          <Loader />
         ) : (
           <View style={{ display: 'flex', flexDirection: 'column' }}>
             <Text style={styles.header}>Регистрация</Text>

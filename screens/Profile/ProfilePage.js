@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AuthContex } from '../../components/contex';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/core';
+import Loader from '../../components/Loader';
 
 export default function ProfileScreen({ navigation }) {
   const { signOut } = React.useContext(AuthContex);
@@ -23,18 +24,7 @@ export default function ProfileScreen({ navigation }) {
     });
   }, [user, isFocused]);
   if (user === null || isLoading === true) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          marginTop: '50%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-      </View>
-    );
+    return <Loader />;
   }
   return (
     <View style={{ marginVertical: '10%', flex: 1 }}>

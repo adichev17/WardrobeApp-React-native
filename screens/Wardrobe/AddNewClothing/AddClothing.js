@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert } from 'react-native';
 import { ActionSheet, Root } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
+import Loader from '../../../components/Loader';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -156,16 +148,7 @@ export default function AddClothing({ navigation }) {
     return (
       <View>
         {isLoading ? (
-          <View
-            style={{
-              flex: 1,
-              height: '100%',
-              marginTop: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-          </View>
+          <Loader />
         ) : (
           <View style={styles.content}>
             <View style={styles.contentImage}>

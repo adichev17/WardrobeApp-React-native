@@ -13,6 +13,7 @@ import { BottomSheet, ListItem, Button } from 'react-native-elements';
 import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../components/Loader';
 
 import ThingComponentScrollViewWrapper from './Components/ThingComponentScrollViewWrapper';
 
@@ -114,18 +115,7 @@ export default function WardRobePage({ navigation }) {
   }, [ListThing]);
 
   if (ListThing === null || SortedListThing === null) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          marginTop: '50%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-      </View>
-    );
+    return <Loader />;
   }
 
   return (

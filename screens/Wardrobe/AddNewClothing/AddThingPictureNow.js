@@ -1,19 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Dimensions,
-  Platform,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Image, Dimensions, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 
 import { ActionSheet, Root } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
+import Loader from '../../../components/Loader';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -140,16 +131,7 @@ export default function AddThingPictureNow({ navigation }) {
     return (
       <View style={styles.content}>
         {isLoading ? (
-          <View
-            style={{
-              flex: 1,
-              height: '100%',
-              marginTop: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-          </View>
+          <Loader />
         ) : (
           <View>
             <View style={styles.contentImage}>

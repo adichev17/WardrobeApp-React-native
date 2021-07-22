@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-import { Text, View, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ImageBackground } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { isPasswordValid } from '../../src/Validation/Valid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContex } from '../../components/contex';
+import Loader from '../../components/Loader';
 
 export default function LoginScreen({ route, navigation }) {
   const [inputLogin, setInputLogin] = useState('DmtriyHi3');
@@ -21,16 +22,7 @@ export default function LoginScreen({ route, navigation }) {
         cache="force-cache"
         resizeMode="cover">
         {isLoading ? (
-          <View
-            style={{
-              flex: 1,
-              height: '100%',
-              marginTop: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-          </View>
+          <Loader />
         ) : (
           <View>
             <Text style={styles.header}>Добро пожаловать!</Text>
