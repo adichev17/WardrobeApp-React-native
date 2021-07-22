@@ -161,24 +161,11 @@ export default function WardRobePage({ navigation }) {
           })}
         </ScrollView>
       </SafeAreaView>
-      <View
-        style={{
-          position: 'absolute',
-          width: 50,
-          height: 50,
-          bottom: 0,
-          right: 0,
-          zIndex: 2,
-        }}>
+      <View style={styles.wrapperFAB}>
         <FAB
           icon={<Icon name="download" size={23} color="black" />}
           titleStyle={{ color: 'black' }}
-          buttonStyle={{
-            borderRadius: '5%',
-            width: 55,
-            height: 55,
-            backgroundColor: '#DADADA',
-          }}
+          buttonStyle={styles.buttonFAB}
           onPress={() => {
             navigation.navigate('addClothing');
           }}
@@ -215,7 +202,6 @@ const styles = StyleSheet.create({
     flex: 4,
     paddingTop: StatusBar.currentHeight,
     zIndex: 1,
-    // marginTop: '5%',
   },
   scrollView: {
     marginHorizontal: 0,
@@ -231,5 +217,18 @@ const styles = StyleSheet.create({
   },
   containerPage: {
     flex: 1,
+  },
+  wrapperFAB: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    bottom: 0,
+    right: 0,
+    zIndex: 2,
+  },
+  buttonFAB: {
+    width: 55,
+    height: 55,
+    backgroundColor: '#DADADA',
   },
 });

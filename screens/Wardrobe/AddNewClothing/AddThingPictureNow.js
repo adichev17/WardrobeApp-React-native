@@ -197,26 +197,8 @@ export default function AddThingPictureNow({ navigation }) {
                 setImageTobase64(photo.base64);
               }
             }}>
-            <View
-              style={{
-                borderWidth: 2,
-                borderRadius: '50%',
-                borderColor: 'white',
-                height: 50,
-                width: 50,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  borderWidth: 2,
-                  borderRadius: '50%',
-                  borderColor: 'white',
-                  height: 40,
-                  width: 40,
-                  backgroundColor: 'white',
-                }}></View>
+            <View style={styles.wrapperBthMakePhoto}>
+              <View style={styles.BthMakePhoto}></View>
             </View>
           </TouchableOpacity>
         </View>
@@ -227,11 +209,8 @@ export default function AddThingPictureNow({ navigation }) {
 
 const styles = StyleSheet.create({
   contentRoot: {
-    // flex: 1,
-    // marginTop: '50%',
     height: '100%',
     justifyContent: 'center',
-    // marginHorizontal: '5%',
     alignItems: 'center',
   },
   contentImage: {
@@ -276,7 +255,6 @@ const styles = StyleSheet.create({
   Dropdown: {
     marginTop: '10%',
     width: '80%',
-    // backgroundColor:"#000000"
   },
   DropdownText: {
     color: 'gray',
@@ -287,4 +265,22 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   bthSave: { fontWeight: 'bold', marginLeft: '25%', color: '#138598' },
+  wrapperBthMakePhoto: {
+    borderWidth: 2,
+    borderRadius: 50,
+    borderColor: 'white',
+    height: 50,
+    width: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  BthMakePhoto: {
+    borderWidth: 2,
+    borderRadius: 50,
+    borderColor: 'white',
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+  },
 });

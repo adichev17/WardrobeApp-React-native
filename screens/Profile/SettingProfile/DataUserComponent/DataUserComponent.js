@@ -2,9 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import { Input, Text } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { isEmailValid } from '../../../../src/Validation/Valid';
+import Loader from '../../../../components/Loader';
 
 export default function DataUserComponent(props) {
   const [user, setUser] = useState(null);
@@ -32,18 +33,7 @@ export default function DataUserComponent(props) {
   }, []);
 
   if (user === null || isLoading === true) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          marginTop: '50%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-      </View>
-    );
+    return <Loader />;
   }
 
   return (

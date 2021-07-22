@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { AuthContex } from '../../../components/contex';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewLook from './ComponentsSavedLooks/ViewLook';
 import { FAB } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
+import Loader from '../../../components/Loader';
 
 const images = [
   [
@@ -42,18 +35,7 @@ export default function Looks({ navigation }) {
   }, [user]);
 
   if (user === null || isLoading === true) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          marginTop: '50%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-      </View>
-    );
+    return <Loader />;
   }
   return (
     <View style={{ marginVertical: '10%', flex: 1 }}>

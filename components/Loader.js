@@ -11,7 +11,7 @@ export default function Loader() {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
+      <ActivityIndicator size="large" color="#706E6E"></ActivityIndicator>
     </View>
   );
 }

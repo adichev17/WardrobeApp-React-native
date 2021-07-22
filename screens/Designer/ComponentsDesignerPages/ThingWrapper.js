@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, Text, Image, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 
 export default function ThingWrapper({ thing, index, setThingsInConstructor }) {
-  const [count, setCount] = useState();
-
   const AddToDesigner = (src) => {
-    // console.log(src);
     setThingsInConstructor(src);
   };
   return (
@@ -19,7 +16,6 @@ export default function ThingWrapper({ thing, index, setThingsInConstructor }) {
           }}
         />
       </TouchableOpacity>
-      {/* {() => setCount(() => count + 1)} */}
     </View>
   );
 }
@@ -28,7 +24,6 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 150,
     height: 180,
-    // marginLeft: '2%',
   },
   wrapper: {
     marginHorizontal: 10,

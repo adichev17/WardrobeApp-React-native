@@ -4,7 +4,7 @@ import Button from '../../components/button';
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={{}}>
+    <View>
       <ImageBackground
         source={require('../../src/bgmain.jpg')}
         cache="force-cache"
@@ -20,15 +20,7 @@ export default function HomeScreen({ navigation }) {
           <View>
             <Button nav={navigation} text="Вход" />
           </View>
-          <Text
-            style={{
-              fontSize: 18,
-              color: '#ffffff',
-              textAlign: 'center',
-              marginVertical: 7,
-            }}>
-            или
-          </Text>
+          <Text style={styles.otherText}>или</Text>
           <View>
             <Button nav={navigation} text="Зарегистрироваться" />
           </View>
@@ -61,5 +53,11 @@ const styles = StyleSheet.create({
   wrapperMainInfo: {
     marginHorizontal: '10%',
     marginTop: '20%',
+  },
+  otherText: {
+    fontSize: 18,
+    color: '#ffffff',
+    textAlign: 'center',
+    marginVertical: 7,
   },
 });
