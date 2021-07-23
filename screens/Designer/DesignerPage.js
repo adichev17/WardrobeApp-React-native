@@ -13,6 +13,7 @@ import { FAB } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryScrollView from './ComponentsDesignerPages/TitleCategoryScrollView';
+import Loader from '../../components/Loader';
 
 import FlatListGridFor3Items from './ComponentsDesignerPages/GridThing/FlatListGridFor3Items';
 import FlatListGridFor4Items from './ComponentsDesignerPages/GridThing/FlatListGridFor4Items';
@@ -94,18 +95,42 @@ export default function DesiggerPage({ navigation }) {
   }, []);
 
   const SaveImages = () => {
-    setData(null);
-    Alert.alert('Успешно', 'Образ сохранён.');
+    setIsLoading(true);
+    if (Data !== null) {
+      AsyncStorage.getItem('id', (err, id) => {
+        if (id) {
+          let Look = {
+            ImagesURI: Data,
+          };
+          console.log(Look);
+          fetch(`https://wardrobeapp.azurewebsites.net/AddLook/${id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8',
+            },
+            body: JSON.stringify(Look),
+          }).then((res) => {
+            if (res.status === 200) {
+              setData(null);
+              setIsLoading(false);
+              Alert.alert('Успешно', 'Образ сохранён.');
+            } else {
+              setData(null);
+              setIsLoading(false);
+              Alert.alert('Ошибка', 'Упс... что-то пошло не так.');
+            }
+          });
+        }
+      });
+    } else {
+      Alert.alert('Ошибка', 'Выберите вещи которые хотите добавить.');
+    }
   };
 
   const renderItem = ({ item }) => <Item uri={item} />;
 
-  if (ListThing === null || SortedListThing === null) {
-    return (
-      <View style={styles.ActivityIndicator}>
-        <ActivityIndicator size="large" color="#00aa00"></ActivityIndicator>
-      </View>
-    );
+  if (ListThing === null || SortedListThing === null || isLoading === true) {
+    return <Loader />;
   }
 
   return (

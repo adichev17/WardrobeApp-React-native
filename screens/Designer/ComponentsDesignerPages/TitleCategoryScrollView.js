@@ -86,6 +86,7 @@ export default function CategoryScrollView({
                 includeThings={el.includeThings}
                 titleCategory={''}
                 setThingsInConstructor={setThingsInConstructor}
+                key={i}
               />
             );
           })}

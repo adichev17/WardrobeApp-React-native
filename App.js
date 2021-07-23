@@ -7,6 +7,7 @@ import MainNav from './navigators/MainNavigator';
 import BottomNavScreen from './navigators/BottomNav';
 import { AuthContex } from './components/contex';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from './components/Loader';
 
 export default function App({ navigation }) {
   initialLoginState = {
@@ -144,16 +145,7 @@ export default function App({ navigation }) {
   }, []);
 
   if (loginState.isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator color="#00aa00" size="large" />
-      </View>
-    );
+    return <Loader />;
   }
   return (
     <AuthContex.Provider value={authContex}>

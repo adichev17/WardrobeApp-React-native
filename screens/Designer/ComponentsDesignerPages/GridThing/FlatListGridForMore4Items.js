@@ -20,13 +20,13 @@ export default function FlatListGridForMore4Items({ Data }) {
   return (
     <Grid>
       <Col>
-        {FirstPartData.map((uri) => {
-          return <Item uri={uri} />;
+        {FirstPartData.map((uri, i) => {
+          return <Item uri={uri} key={i} />;
         })}
       </Col>
       <Col>
-        {SecondPartData.map((uri) => {
-          return <Item uri={uri} />;
+        {SecondPartData.map((uri, i) => {
+          return <Item uri={uri} key={i} />;
         })}
       </Col>
     </Grid>

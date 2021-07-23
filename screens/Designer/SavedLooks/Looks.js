@@ -8,33 +8,28 @@ import { FAB } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
 import Loader from '../../../components/Loader';
 
-const images = [
-  [
-    'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:50:04 GMT+0300 (MSK).jpg',
-    'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:52:38 GMT+0300 (MSK).jpg',
-  ],
-  [
-    'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:46:59 GMT+0300 (MSK).jpg',
-    'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:54:01 GMT+0300 (MSK).jpg',
-    'https://wardrobeapp.azurewebsites.net/Images/Thu Jul 08 2021 18:51:53 GMT+0300 (MSK).jpg',
-  ],
-];
 export default function Looks({ navigation }) {
-  const { signOut } = React.useContext(AuthContex);
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [looks, setLooks] = useState(null);
 
   React.useEffect(() => {
-    AsyncStorage.getItem('user', (err, result) => {
+    AsyncStorage.getItem('id', (err, result) => {
       if (result) {
-        let localUser = JSON.parse(result);
-        setUser(localUser);
-        setIsLoading(false);
+        fetch(`https://wardrobeapp.azurewebsites.net/GetAllLooks/${result}`)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data !== undefined) {
+              setLooks(data);
+              setIsLoading(false);
+            }
+          });
       }
     });
-  }, [user]);
+  }, []);
 
-  if (user === null || isLoading === true) {
+  if (isLoading === true || looks === null) {
     return <Loader />;
   }
   return (
@@ -49,8 +44,8 @@ export default function Looks({ navigation }) {
       </TouchableOpacity>
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
-          {images.map((item) => {
-            return <ViewLook look={item} />;
+          {looks.map((item, index) => {
+            return <ViewLook look={item} key={index} />;
           })}
         </ScrollView>
       </SafeAreaView>
