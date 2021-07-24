@@ -169,7 +169,7 @@ export default function DesiggerPage({ navigation }) {
       </SafeAreaView>
       <View style={styles.wrapperFAB}>
         <FAB
-          icon={<Icon name="angle-double-down" size={23} color="black" />}
+          icon={<Icon name="angle-double-down" size={28} color="#ffffff" />}
           titleStyle={{ color: 'black' }}
           buttonStyle={styles.ButtonFAB}
           onPress={() => {
@@ -223,14 +223,14 @@ const styles = StyleSheet.create({
     // borderRadius: '5%',
     width: 55,
     height: 55,
-    backgroundColor: '#A59191',
+    backgroundColor: '#2C3138',
   },
   wrapperFAB: {
     position: 'absolute',
     width: 50,
     height: 50,
-    bottom: 10,
-    right: 5,
+    bottom: 30,
+    right: 10,
     zIndex: 2,
   },
   header: {

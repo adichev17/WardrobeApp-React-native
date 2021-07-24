@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, ScrollView, Text, TouchableOpacity } from 'react-native';
-import { AuthContex } from '../../../components/contex';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewLook from './ComponentsSavedLooks/ViewLook';
-import { FAB } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
 import Loader from '../../../components/Loader';
 

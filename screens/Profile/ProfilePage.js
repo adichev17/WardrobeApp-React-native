@@ -68,6 +68,7 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   fieldsWrapper: {
     flexDirection: 'row',
+    marginHorizontal: '5%',
   },
   fields: {
     marginTop: '3%',

@@ -38,7 +38,8 @@ export default function WardRobePage({ navigation }) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    GetAllThings();
+    // wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const GetAllThings = () => {
@@ -53,6 +54,7 @@ export default function WardRobePage({ navigation }) {
               setListThing(data);
               setIsLoading(false);
               setSortedListThing(data);
+              setRefreshing(false);
             }
           });
       }
@@ -119,46 +121,48 @@ export default function WardRobePage({ navigation }) {
   }
 
   return (
-    // <SafeAreaView style={styles.containerPage}>
-    //   <ScrollView
-    //     contentContainerStyle={styles.scrollViewPage}
-    //     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
     <View style={styles.wrapper}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.header}>Ваш гардероб</Text>
-        <Button
-          title={nameActiveCategory}
-          buttonStyle={styles.openModalCategory}
-          titleStyle={styles.titleCategory}
-          onPress={(state) => setIsVisible(true)}
-        />
-        <BottomSheet
-          isVisible={isVisible}
-          containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}>
-          {ListCategory !== null ? (
-            ListCategory.map((l, i) => (
-              <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
-                <ListItem.Content>
-                  <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
-            ))
-          ) : (
-            <Text></Text>
-          )}
-        </BottomSheet>
-      </View>
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          {SortedListThing.map((thing, i) => {
-            return (
-              <ThingComponentScrollViewWrapper
-                key={i}
-                includeThings={thing.includeThings}
-                titleCategory={thing.category}
-              />
-            );
-          })}
+      <SafeAreaView style={styles.containerPage}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewPage}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.header}>Ваш гардероб</Text>
+            <Button
+              title={nameActiveCategory}
+              buttonStyle={styles.openModalCategory}
+              titleStyle={styles.titleCategory}
+              onPress={(state) => setIsVisible(true)}
+            />
+            <BottomSheet
+              isVisible={isVisible}
+              containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}>
+              {ListCategory !== null ? (
+                ListCategory.map((l, i) => (
+                  <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
+                    <ListItem.Content>
+                      <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                ))
+              ) : (
+                <Text></Text>
+              )}
+            </BottomSheet>
+          </View>
+          <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+              {SortedListThing.map((thing, i) => {
+                return (
+                  <ThingComponentScrollViewWrapper
+                    key={i}
+                    includeThings={thing.includeThings}
+                    titleCategory={thing.category}
+                  />
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
         </ScrollView>
       </SafeAreaView>
       <View style={styles.wrapperFAB}>
@@ -172,8 +176,6 @@ export default function WardRobePage({ navigation }) {
         />
       </View>
     </View>
-    //   </ScrollView>
-    // </SafeAreaView>
   );
 }
 
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
     flex: 4,
     paddingTop: StatusBar.currentHeight,
     zIndex: 1,
+    marginTop: '5%',
   },
   scrollView: {
     marginHorizontal: 0,

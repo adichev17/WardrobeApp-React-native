@@ -251,6 +251,8 @@ const styles = StyleSheet.create({
     marginTop: '18%',
     height: '15%',
     marginHorizontal: '10%',
+    borderTopWidth: 0.5,
+    borderTopColor: '#138598',
   },
   Dropdown: {
     marginTop: '10%',

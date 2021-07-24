@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 150,
     height: 180,
+    borderWidth: 0.5,
+    borderColor: 'gray',
   },
   wrapper: {
     marginHorizontal: 10,

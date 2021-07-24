@@ -19,7 +19,12 @@ export default function ThingComponentScrollViewWrapper({
       <ScrollView style={styles.wrapperCategoryThing} horizontal={true}>
         {includeThings.map((thing, i) => {
           return (
-            <ThingWrapper thing={thing} i={i} setThingsInConstructor={setThingsInConstructor} />
+            <ThingWrapper
+              thing={thing}
+              i={i}
+              setThingsInConstructor={setThingsInConstructor}
+              key={i}
+            />
           );
         })}
       </ScrollView>
