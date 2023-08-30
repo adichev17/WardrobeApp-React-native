@@ -21,7 +21,7 @@ link: [https://youtu.be/t9ebX1XbUs4](https://www.youtube.com/watch?v=2STiQVxxECM
 ### Installing
 
 ```
-git clone [https://github.com/adichev17/WardrobeApp-ASP-MVC.git](https://github.com/adichev17/WardrobeApp-React-native.git)https://github.com/adichev17/WardrobeApp-React-native.git
+git clone https://github.com/adichev17/WardrobeApp-React-native.git
 ```
 
 
